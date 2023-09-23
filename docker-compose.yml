@@ -1,0 +1,53 @@
+version: "3.9"
+services:
+  nginx:
+    container_name: larixon_nginx
+    build: ./nginx/
+    restart: always
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+      - web_static:/var/www/larixon/assets/:ro
+    ports:
+      - "8888:80"
+    depends_on:
+      - django
+    networks:
+      - larixon
+
+  django:
+    container_name: larixon_backend
+    build: ./web/
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - uwsgi_data:/tmp/uwsgi/
+      - web_static:/app/static/
+      - web_static:/var/www/larixon/assets/
+    depends_on:
+      - postgres-db
+    networks:
+      - larixon
+
+  postgres-db:
+    container_name: larixon_postgres
+    ports:
+      - "5432:5432"
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data/
+    networks:
+      - larixon
+
+volumes:
+  uwsgi_data:
+  web_static:
+  postgres-data:
+
+networks:
+  larixon:
+    driver: bridge
