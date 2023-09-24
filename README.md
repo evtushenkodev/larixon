@@ -25,7 +25,13 @@ cd larixon_test
 docker-compose up -d
 ```
 
-После успешного запуска, проект будет доступен по адресу http://localhost:8888/admin.
+После успешного запуска, проект будет доступен по адресу 
+
+Admin панель: http://localhost:8888/admin
+
+Список объявлений: http://localhost:8888/api/v1/advert-list/
+
+Объявление с id=1: http://localhost:8888/api/v1/advert/1/
 
 ## Запуск тестов
 
